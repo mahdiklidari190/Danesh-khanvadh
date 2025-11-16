@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>درس اخلاق | سوالات مذهبی</title>
+  <title>آزمون اخلاق اسلامی</title>
   <style>
     body {
       margin: 0;
       font-family: "Tahoma", sans-serif;
       background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       color: #fff;
-      direction: rtl; /* متن فارسی راست به چپ */
+      direction: rtl;
     }
 
     .page {
@@ -19,7 +19,6 @@
       flex-direction: column;
     }
 
-    /* هدر با دکمه‌های خفن */
     header {
       padding: 14px;
       display: flex;
@@ -42,6 +41,7 @@
       transition: 0.3s;
       box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
     }
+
     .mode-btn:hover {
       transform: scale(1.06);
       background: linear-gradient(135deg, #ffe066, #ffb300);
@@ -57,7 +57,7 @@
 
     .question-box {
       width: 100%;
-      max-width: 600px;
+      max-width: 700px;
       background: rgba(255,255,255,0.12);
       backdrop-filter: blur(16px);
       border-radius: 26px;
@@ -66,39 +66,11 @@
     }
 
     .question-title {
-      font-size: 24px;
+      font-size: 22px;
       margin-bottom: 16px;
       color: #ffd700;
       text-shadow: 0 0 10px rgba(255,215,0,0.5);
-      text-align: right; /* تأکید بر راست‌چین */
       line-height: 1.8;
-    }
-
-    /* نوار وضعیت */
-    .status-bar {
-      margin: 10px 0 22px 0;
-      width: 100%;
-      height: 40px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.2);
-      overflow: hidden;
-      position: relative;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
-    }
-    .status-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #ffd700, #ff9800);
-      transition: width 0.4s ease;
-    }
-    .status-text {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      color: #1a1a1a;
     }
 
     .options {
@@ -106,6 +78,7 @@
       flex-direction: column;
       gap: 14px;
     }
+
     .option {
       background: rgba(255,255,255,0.18);
       padding: 16px;
@@ -114,13 +87,14 @@
       transition: 0.25s;
       font-size: 18px;
       font-weight: 600;
-      text-align: right; /* گزینه‌ها راست‌چین */
       border: 1px solid transparent;
     }
+
     .option:hover {
       background: rgba(255,255,255,0.28);
       transform: translateY(-2px);
     }
+
     .option.selected {
       background: #ffd700;
       color: #1a1a1a;
@@ -142,19 +116,31 @@
       transition: 0.3s;
       box-shadow: 0 8px 16px rgba(46,204,113,0.3);
     }
+
     .confirm-btn:hover {
       transform: scale(1.04);
       background: linear-gradient(135deg, #32d67d, #2ecc71);
     }
 
-    /* تکان برای هشدار عدم انتخاب */
-    @keyframes shake {
-      10%, 90% { transform: translateX(-1px); }
-      20%, 80% { transform: translateX(2px); }
-      30%, 50%, 70% { transform: translateX(-4px); }
-      40%, 60% { transform: translateX(4px); }
+    .result-box {
+      margin-top: 20px;
+      padding: 20px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 16px;
     }
-    .shake { animation: shake 0.35s; }
+
+    .result-item {
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .correct {
+      color: #2ecc71;
+    }
+
+    .incorrect {
+      color: #e74c3c;
+    }
 
     footer {
       text-align: center;
@@ -165,71 +151,89 @@
 
     @media (max-width: 360px) {
       .question-box { max-width: 95vw; padding: 22px; }
-      .question-title { font-size: 22px; }
-      .status-bar { height: 36px; }
+      .question-title { font-size: 20px; }
     }
   </style>
 </head>
 <body>
   <div class="page">
     <header>
-      <button class="mode-btn" onclick="setMode('truefalse')">سوال‌های درست و غلط</button>
-      <button class="mode-btn" onclick="setMode('four')">سوال‌های چهار گزینه‌ای</button>
-      <button class="mode-btn" onclick="setMode('two')">سوال‌های دو گزینه‌ای</button>
+      <button class="mode-btn" onclick="setMode('four')">چهار گزینه‌ای</button>
+      <button class="mode-btn" onclick="setMode('truefalse')">درست/غلط</button>
+      <button class="mode-btn" onclick="setMode('two')">دو گزینه‌ای</button>
     </header>
 
     <div class="center-wrap">
       <div class="question-box" id="qbox">
-        <h2 class="question-title" id="question">اخلاق اسلامی: احترام به والدین</h2>
-
-        <div class="status-bar">
-          <div class="status-fill" id="status-fill"></div>
-          <div class="status-text" id="status-text">0 از 10 پاسخ داده شده</div>
-        </div>
-
+        <h2 class="question-title" id="question">سؤال</h2>
         <div class="options" id="options"></div>
-        <button class="confirm-btn" onclick="nextQuestion()">تأیید</button>
+        <button class="confirm-btn" onclick="handleConfirm()">تأیید</button>
+        <div class="result-box" id="result" style="display: none;"></div>
       </div>
     </div>
 
-    <footer>طراحی مذهبی و اخلاقی • مناسب موبایل</footer>
+    <footer>طراحی هوشمند • مناسب موبایل</footer>
   </div>
 
   <script>
-    // داده‌ها با موضوع اخلاق اسلامی
     const data = {
       four: [
-        { q: "کدام مورد از نشانه‌های احترام به والدین است؟", opts: ["گوش دادن با دقت", "بی‌توجهی", "قطع صحبت", "بی‌ادبی"] },
-        { q: "کدام کار در اخلاق اسلامی توصیه شده است؟", opts: ["راستگویی", "تمسخر", "غیبت", "ناسزا"] },
-      ],
-      two: [
-        { q: "کمک به نیازمندان بخشی از اخلاق اسلامی است؟", opts: ["بله", "خیر"] },
-        { q: "آیا امانت‌داری واجب اخلاقی است؟", opts: ["بله", "خیر"] },
+        { q: "هدف نهایی اخلاق اسلامی چیست؟", opts: ["رسیدن به سعادت و کمال انسانی", "افزایش ثروت", "کسب قدرت سیاسی", "رقابت اجتماعی"], correct: 0 },
+        { q: "کدام‌یک از اصول زیر از مبانی اخلاق اسلامی محسوب می‌شود؟", opts: ["توحید", "نسبی‌گرایی اخلاقی", "فردگرایی مطلق", "سودگرایی"], correct: 0 },
+        { q: "عدالت در اخلاق اسلامی به چه معناست؟", opts: ["مساوات مطلق", "قرار دادن هر چیز در جای خود", "تقسیم برابر ثروت", "آزادی بی‌حد و مرز"], correct: 1 },
+        { q: "کدام‌یک از موارد زیر از فضایل اخلاقی در اسلام است؟", opts: ["صداقت", "حسادت", "تکبر", "دروغ"], correct: 0 },
+        { q: "مبانی اخلاق اسلامی بیشتر بر چه منابعی استوار است؟", opts: ["قرآن و سنت پیامبر (ص)", "فلسفه یونان", "عرف اجتماعی", "تجربه شخصی"], correct: 0 },
+        { q: "کدام‌یک از رذایل اخلاقی در اسلام به شدت نکوهش شده است؟", opts: ["تواضع", "تکبر", "ایثار", "صداقت"], correct: 1 },
+        { q: "اخلاق اسلامی چه رابطه‌ای با ایمان دارد؟", opts: ["هیچ ارتباطی ندارد", "مکمل ایمان است", "جایگزین ایمان است", "مانع ایمان است"], correct: 1 },
+        { q: "در اخلاق اسلامی، «تقوا» به چه معناست؟", opts: ["پرهیز از گناه و انجام وظایف الهی", "افزایش ثروت", "کسب قدرت سیاسی", "آزادی مطلق"], correct: 0 },
+        { q: "کدام‌یک از منابع شناخت اخلاق اسلامی است؟", opts: ["عقل و وحی", "تجربه شخصی", "عرف اجتماعی", "فلسفه غرب"], correct: 0 },
+        { q: "هدف اخلاق اسلامی چیست؟", opts: ["تعالی روحی و معنوی", "افزایش قدرت", "توسعه اقتصادی", "رقابت اجتماعی"], correct: 0 },
       ],
       truefalse: [
-        { q: "نماز ستون دین است.", opts: ["درست", "غلط"] },
-        { q: "غیبت رفتاری پسندیده است.", opts: ["درست", "غلط"] },
+        { q: "اخلاق اسلامی تنها به رفتار فردی انسان توجه دارد.", opts: ["درست", "غلط"], correct: 1 },
+        { q: "صداقت یکی از اصول اساسی اخلاق اسلامی است.", opts: ["درست", "غلط"], correct: 0 },
+        { q: "عدالت در اخلاق اسلامی به معنای مساوات مطلق است.", opts: ["درست", "غلط"], correct: 1 },
+        { q: "اخلاق اسلامی بر پایه عقل و وحی بنا شده است.", opts: ["درست", "غلط"], correct: 0 },
+        { q: "تواضع از فضایل اخلاقی در اسلام است.", opts: ["درست", "غلط"], correct: 0 },
+        { q: "تکبر از فضایل اخلاقی در اسلام است.", opts: ["درست", "غلط"], correct: 1 },
+        { q: "ایثار به معنای ترجیح دادن دیگران بر خود در امور خیر است.", opts: ["درست", "غلط"], correct: 0 },
+        { q: "اخلاق اسلامی هیچ ارتباطی با ایمان ندارد.", opts: ["درست", "غلط"], correct: 1 },
+        { q: "تقوا به معنای پرهیز از گناه و انجام وظایف الهی است.", opts: ["درست", "غلط"], correct: 0 },
+        { q: "هدف اخلاق اسلامی تعالی روحی و معنوی انسان است.", opts: ["درست", "غلط"], correct: 0 },
       ],
+      two: [
+        { q: "خودفراموشی به خودفریبی منتهی می‌شود؟", opts: ["بله", "خیر"], correct: 0 },
+        { q: "تسویل در قرآن به معنای توجیه نفس در انجام کار زشت است؟", opts: ["بله", "خیر"], correct: 0 },
+        { q: "خودآگاهی در خودسازی اخلاقی نقش دارد؟", opts: ["بله", "خیر"], correct: 0 },
+        { q: "قناعت می‌تواند به آرامش روانی منجر شود؟", opts: ["بله", "خیر"], correct: 0 },
+        { q: "حکمت فقط با مطالعه کتاب به دست می‌آید؟", opts: ["بله", "خیر"], correct: 1 },
+        { q: "عزت نفس سالم با تکبر تفاوت دارد؟", opts: ["بله", "خیر"], correct: 0 },
+        { q: "غفلت از خدا باعث سقوط اخلاقی می‌شود؟", opts: ["بله", "خیر"], correct: 0 },
+        { q: "کفران نعمت به ناسپاسی گفته می‌شود؟", opts: ["بله", "خیر"], correct: 0 },
+        { q: "تقوا مانع گناه می‌شود؟", opts: ["بله", "خیر"], correct: 0 },
+        { q: "توکل با تلاش منافات دارد؟", opts: ["بله", "خیر"], correct: 1 },
+      ]
     };
 
-    let mode = "four";           // حالت پیش‌فرض
-    let answered = 0;
-    const totalQuestions = 10;
+    let mode = "four";
     let currentIndex = 0;
     let selectedIndex = null;
+    let userAnswers = [];
 
     function setMode(m) {
       mode = m;
       currentIndex = 0;
       selectedIndex = null;
+      userAnswers = [];
+      document.getElementById("result").style.display = "none";
+      document.querySelector(".confirm-btn").style.display = "inline-block";
       renderQuestion();
-      updateStatus();
     }
 
     function renderQuestion() {
       const list = data[mode];
-      const item = list[currentIndex % list.length];
-      document.getElementById("question").innerText = item.q;
+      const item = list[currentIndex];
+      document.getElementById("question").innerText = `سوال ${currentIndex + 1}: ${item.q}`;
 
       const optionsDiv = document.getElementById("options");
       optionsDiv.innerHTML = "";
@@ -249,29 +253,70 @@
       el.classList.add("selected");
     }
 
-    function nextQuestion() {
+    function handleConfirm() {
       const qbox = document.getElementById("qbox");
       if (selectedIndex === null) {
         qbox.classList.add("shake");
         setTimeout(() => qbox.classList.remove("shake"), 360);
         return;
       }
-      answered = Math.min(answered + 1, totalQuestions);
-      updateStatus();
-      selectedIndex = null;
+
+      userAnswers.push({
+        question: data[mode][currentIndex].q,
+        userAnswer: selectedIndex,
+        correctAnswer: data[mode][currentIndex].correct,
+        options: data[mode][currentIndex].opts
+      });
+
       currentIndex++;
-      renderQuestion();
+      selectedIndex = null;
+
+      if (currentIndex < data[mode].length) {
+        renderQuestion();
+      } else {
+        showResults();
+      }
     }
 
-    function updateStatus() {
-      const pct = Math.round((answered / totalQuestions) * 100);
-      document.getElementById("status-fill").style.width = pct + "%";
-      document.getElementById("status-text").innerText = `${answered} از ${totalQuestions} پاسخ داده شده`;
+    function showResults() {
+      document.getElementById("options").innerHTML = "";
+      document.querySelector(".confirm-btn").style.display = "none";
+      document.getElementById("question").innerText = "نتیجه آزمون";
+
+      let correctCount = 0;
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "";
+      resultDiv.style.display = "block";
+
+      userAnswers.forEach((item, index) => {
+        const isCorrect = item.userAnswer === item.correctAnswer;
+        if (isCorrect) correctCount++;
+
+        const div = document.createElement("div");
+        div.className = "result-item";
+        div.innerHTML = `<strong>سوال ${index + 1}:</strong> ${item.question}<br>`;
+
+        item.options.forEach((opt, i) => {
+          const span = document.createElement("span");
+          span.innerText = opt;
+          if (i === item.correctAnswer) {
+            span.className = "correct";
+          } else if (i === item.userAnswer && !isCorrect) {
+            span.className = "incorrect";
+          }
+          div.appendChild(span);
+          div.appendChild(document.createElement("br"));
+        });
+
+        resultDiv.appendChild(div);
+      });
+
+      const score = (correctCount / data[mode].length) * 100;
+      resultDiv.innerHTML = `<h3>امتیاز شما: ${score.toFixed(0)}٪ (${correctCount} از ${data[mode].length} پاسخ درست)</h3>` + resultDiv.innerHTML;
     }
 
     // بارگذاری اولیه
     renderQuestion();
-    updateStatus();
   </script>
 </body>
 </html>
