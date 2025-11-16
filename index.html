@@ -1,260 +1,182 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Application</title>
-    <style>
-        body {
-            font-family: 'B Nazanin', serif;
-            direction: rtl;
-            text-align: right;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        .question {
-            margin-bottom: 20px;
-            font-size: 1.2em;
-        }
-        .options {
-            margin-bottom: 20px;
-        }
-        .option {
-            margin: 5px 0;
-            padding: 10px;
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        .option:hover {
-            background: #e9e9e9;
-        }
-        .submit-btn {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background: #28a745;
-            color: white;
-            border: none;
-            cursor: pointer;
-            text-align: center;
-            border-radius: 4px;
-        }
-        .submit-btn:hover {
-            background: #218838;
-        }
-        .result {
-            margin-top: 20px;
-            font-size: 1.2em;
-            color: #28a745;
-        }
-        .nav-bar {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .nav-bar button {
-            padding: 10px 20px;
-            margin: 0 10px;
-            background: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        .nav-bar button:hover {
-            background: #0056b3;
-        }
-        .descriptive {
-            margin-bottom: 20px;
-        }
-        .descriptive textarea {
-            width: 100%;
-            height: 100px;
-            margin-top: 10px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .matching {
-            margin-bottom: 20px;
-        }
-        .matching .pair {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        .matching .pair input {
-            width: 45%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سوالات شیک</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Tahoma', sans-serif;
+      background: linear-gradient(135deg, #1f1c2c, #928dab);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      margin: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    header button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      background: #ffcc00;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    header button:hover {
+      background: #ffd633;
+      transform: scale(1.05);
+    }
+
+    .question-box {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .options {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .option:hover {
+      background: #ffcc00;
+      color: #000;
+    }
+
+    .confirm-btn {
+      margin-top: 15px;
+      padding: 12px;
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      background: #00c9ff;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .confirm-btn:hover {
+      background: #92fe9d;
+    }
+
+    .status-bar {
+      margin-top: 20px;
+      width: 90%;
+      max-width: 400px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .status-fill {
+      background: #ffcc00;
+      height: 20px;
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    .status-text {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      color: #000;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="nav-bar">
-            <button id="multi-choice-btn">چندگزینه‌ای</button>
-            <button id="true-false-btn">صحیح/غلط</button>
-            <button id="descriptive-btn">تشریحی</button>
-            <button id="matching-btn">تطبیقی</button>
-        </div>
-        <div class="question" id="question"></div>
-        <div class="options" id="options"></div>
-        <div class="descriptive" id="descriptive" style="display: none;">
-            <textarea id="descriptive-answer" placeholder="جواب خود را اینجا بنویسید"></textarea>
-        </div>
-        <div class="matching" id="matching" style="display: none;">
-            <div class="pair">
-                <input type="text" id="matching-1" placeholder="جواب اول">
-                <input type="text" id="matching-2" placeholder="جواب دوم">
-            </div>
-            <div class="pair">
-                <input type="text" id="matching-3" placeholder="جواب سوم">
-                <input type="text" id="matching-4" placeholder="جواب چهارم">
-            </div>
-        </div>
-        <button class="submit-btn" id="submit-btn">تایید</button>
-        <div class="result" id="result"></div>
-    </div>
+  <header>
+    <button onclick="setMode('four')">چهار گزینه‌ای</button>
+    <button onclick="setMode('two')">دو گزینه‌ای</button>
+    <button onclick="setMode('truefalse')">غلط/درست</button>
+  </header>
 
-    <script>
-        const questions = {
-            multiChoice: [
-                {
-                    question: "از دیدگاه اسلام، مهم‌ترین رکن معارف انسان‌شناختی چیست؟",
-                    options: ["تجربه", "عقل", "فطرت", "جامعه"],
-                    correctAnswer: 2
-                },
-                {
-                    question: "کدام یک از قوای نفس، \"فرشته‌صفت\" نامیده شده است؟",
-                    options: ["قوه غضب", "قوه شهوت", "قوه عاقله", "قوه وهم"],
-                    correctAnswer: 2
-                },
-                // Add more multiple-choice questions here
-            ],
-            trueFalse: [
-                {
-                    question: "فطرت از مهم‌ترین ارکان معارف انسان‌شناختی در اسلام است.",
-                    correctAnswer: true
-                },
-                {
-                    question: "قوه وهم همان قوه عاقله است که به مرحله کمال رسیده.",
-                    correctAnswer: false
-                },
-                // Add more true/false questions here
-            ],
-            descriptive: [
-                {
-                    question: "ساختار چندساحتی وجود انسان را از نگاه این کتاب توضیح دهید."
-                },
-                {
-                    question: "\"ملکه\" چیست و اصول تحصیل آن را نام ببرید."
-                },
-                // Add more descriptive questions here
-            ],
-            matching: [
-                {
-                    question: "ارتباط بین \"فطرت\" (فصل 1) و \"نظام ارزش‌گذاری فطری\" (فصل 1) را با \"مقصد رشد اخلاقی\" (فصل 2) تحلیل کنید."
-                },
-                {
-                    question: "چگونه \"هوای نفس\" (فصل 3) به \"خودفراموشی\" (فصل 7) دامن می‌زند؟ این رابطه را توضیح دهید."
-                },
-                // Add more matching questions here
-            ]
-        };
+  <div class="question-box">
+    <h2 id="question">یک سوال نمونه اینجاست</h2>
+    <div class="options" id="options"></div>
+    <button class="confirm-btn" onclick="nextQuestion()">تأیید</button>
+  </div>
 
-        let currentQuestionIndex = { multiChoice: 0, trueFalse: 0, descriptive: 0, matching: 0 };
-        let score = { multiChoice: 0, trueFalse: 0, descriptive: 0, matching: 0 };
-        let currentCategory = 'multiChoice';
+  <div class="status-bar">
+    <div class="status-fill" id="status-fill"></div>
+    <div class="status-text" id="status-text">0 سوال پاسخ داده شده</div>
+  </div>
 
-        const questionElement = document.getElementById('question');
-        const optionsElement = document.getElementById('options');
-        const descriptiveElement = document.getElementById('descriptive');
-        const matchingElement = document.getElementById('matching');
-        const submitButton = document.getElementById('submit-btn');
-        const resultElement = document.getElementById('result');
+  <script>
+    let mode = 'four';
+    let answered = 0;
 
-        document.getElementById('multi-choice-btn').addEventListener('click', () => switchCategory('multiChoice'));
-        document.getElementById('true-false-btn').addEventListener('click', () => switchCategory('trueFalse'));
-        document.getElementById('descriptive-btn').addEventListener('click', () => switchCategory('descriptive'));
-        document.getElementById('matching-btn').addEventListener('click', () => switchCategory('matching'));
+    function setMode(m) {
+      mode = m;
+      loadQuestion();
+    }
 
-        function switchCategory(category) {
-            currentCategory = category;
-            displayQuestion();
-        }
+    function loadQuestion() {
+      const optionsDiv = document.getElementById('options');
+      optionsDiv.innerHTML = '';
+      let questionText = '';
+      let optionCount = 0;
 
-        function displayQuestion() {
-            const currentQuestion = questions[currentCategory][currentQuestionIndex[currentCategory]];
-            questionElement.textContent = currentQuestion.question;
-            optionsElement.innerHTML = '';
-            descriptiveElement.style.display = 'none';
-            matchingElement.style.display = 'none';
+      if (mode === 'four') {
+        questionText = 'این یک سوال چهار گزینه‌ای است';
+        optionCount = 4;
+      } else if (mode === 'two') {
+        questionText = 'این یک سوال دو گزینه‌ای است';
+        optionCount = 2;
+      } else if (mode === 'truefalse') {
+        questionText = 'این یک سوال درست/غلط است';
+        optionCount = 2;
+      }
 
-            if (currentCategory === 'multiChoice') {
-                currentQuestion.options.forEach((option, index) => {
-                    const optionElement = document.createElement('div');
-                    optionElement.classList.add('option');
-                    optionElement.textContent = option;
-                    optionElement.addEventListener('click', () => selectOption(index));
-                    optionsElement.appendChild(optionElement);
-                });
-            } else if (currentCategory === 'trueFalse') {
-                const optionElementTrue = document.createElement('div');
-                optionElementTrue.classList.add('option');
-                optionElementTrue.textContent = 'صحیح';
-                optionElementTrue.addEventListener('click', () => selectOption(true));
-                optionsElement.appendChild(optionElementTrue);
+      document.getElementById('question').innerText = questionText;
 
-                const optionElementFalse = document.createElement('div');
-                optionElementFalse.classList.add('option');
-                optionElementFalse.textContent = 'غلط';
-                optionElementFalse.addEventListener('click', () => selectOption(false));
-                optionsElement.appendChild(optionElementFalse);
-            } else if (currentCategory === 'descriptive') {
-                descriptiveElement.style.display = 'block';
-            } else if (currentCategory === 'matching') {
-                matchingElement.style.display = 'block';
-            }
+      for (let i = 1; i <= optionCount; i++) {
+        const opt = document.createElement('div');
+        opt.className = 'option';
+        opt.innerText = 'گزینه ' + i;
+        optionsDiv.appendChild(opt);
+      }
+    }
 
-            submitButton.disabled = true;
-        }
+    function nextQuestion() {
+      answered++;
+      document.getElementById('status-fill').style.width = (answered * 10) + '%';
+      document.getElementById('status-text').innerText = answered + ' سوال پاسخ داده شده';
+      loadQuestion();
+    }
 
-        function selectOption(selectedIndex) {
-            if (currentCategory === 'multiChoice' || currentCategory === 'trueFalse') {
-                if (selectedIndex === questions[currentCategory][currentQuestionIndex[currentCategory]].correctAnswer) {
-                    score[currentCategory]++;
-                }
-            }
-            submitButton.disabled = false;
-        }
-
-        submitButton.addEventListener('click', () => {
-            currentQuestionIndex[currentCategory]++;
-            if (currentQuestionIndex[currentCategory] < questions[currentCategory].length) {
-                displayQuestion();
-            } else {
-                resultElement.textContent = `امتیاز شما: ${score[currentCategory]} از ${questions[currentCategory].length}`;
-                questionElement.style.display = 'none';
-                optionsElement.style.display = 'none';
-                descriptiveElement.style.display = 'none';
-                matchingElement.style.display = 'none';
-                submitButton.style.display = 'none';
-            }
-        });
-
-        displayQuestion();
-    </script>
+    // بارگذاری اولیه
+    loadQuestion();
+  </script>
 </body>
 </html>
