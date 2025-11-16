@@ -1,92 +1,93 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>درس اخلاق | سوالات مذهبی</title>
   <style>
-    /* پس‌زمینه مذهبی و لاکچری */
     body {
       margin: 0;
       font-family: "Tahoma", sans-serif;
-      background: radial-gradient(circle at 20% 20%, #0f2027 0%, #203a43 40%, #2c5364 100%);
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       color: #fff;
+      direction: rtl; /* متن فارسی راست به چپ */
     }
 
-    /* مرکز کردن عمودی/افقی محتوا */
     .page {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
+    /* هدر با دکمه‌های خفن */
     header {
-      padding: 12px;
+      padding: 14px;
       display: flex;
-      gap: 10px;
+      gap: 12px;
       justify-content: center;
       flex-wrap: wrap;
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.15);
     }
 
     header button {
-      padding: 10px 14px;
+      padding: 12px 18px;
       border: none;
-      border-radius: 10px;
-      background: #ffd700;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #ffd700, #ff9800);
       color: #1a1a1a;
       font-weight: bold;
       cursor: pointer;
-      transition: 0.25s;
+      transition: 0.3s;
+      box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
     }
-    header button:hover { transform: translateY(-1px); background: #ffe066; }
+    header button:hover {
+      transform: scale(1.08);
+      background: linear-gradient(135deg, #ffe066, #ffb300);
+    }
 
-    /* کانتینر مرکزی */
     .center-wrap {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 18px;
+      padding: 20px;
     }
 
-    /* باکس سوال بزرگ و وسط */
     .question-box {
       width: 100%;
-      max-width: 540px;
+      max-width: 600px;
       background: rgba(255,255,255,0.12);
-      backdrop-filter: blur(14px);
-      border-radius: 22px;
-      padding: 22px;
-      box-shadow: 0 12px 28px rgba(255,215,0,0.18), inset 0 0 0 1px rgba(255,255,255,0.18);
-      position: relative;
+      backdrop-filter: blur(16px);
+      border-radius: 26px;
+      padding: 28px;
+      box-shadow: 0 12px 28px rgba(255,215,0,0.25), inset 0 0 0 1px rgba(255,255,255,0.18);
+      text-align: center;
     }
 
     .question-title {
-      font-size: 22px;
-      line-height: 1.6;
-      margin: 0 0 14px 0;
+      font-size: 24px;
+      margin-bottom: 18px;
       color: #ffd700;
-      text-shadow: 0 0 8px rgba(255,215,0,0.35);
+      text-shadow: 0 0 10px rgba(255,215,0,0.5);
     }
 
-    /* نوار وضعیت بزرگ زیر متن سوال */
+    /* نوار وضعیت */
     .status-bar {
-      margin: 8px 0 18px 0;
+      margin: 10px 0 22px 0;
       width: 100%;
-      height: 34px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.18);
+      height: 38px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.2);
       overflow: hidden;
       position: relative;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
     }
     .status-fill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #ffd700 0%, #ffb300 60%, #ff9800 100%);
+      background: linear-gradient(90deg, #ffd700, #ff9800);
       transition: width 0.4s ease;
     }
     .status-text {
@@ -97,91 +98,71 @@
       justify-content: center;
       font-weight: 700;
       color: #1a1a1a;
-      text-shadow: 0 1px 0 rgba(255,255,255,0.6);
     }
 
-    /* گزینه‌ها */
     .options {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
     }
     .option {
-      background: rgba(255,255,255,0.16);
-      padding: 14px;
-      border-radius: 14px;
+      background: rgba(255,255,255,0.18);
+      padding: 16px;
+      border-radius: 16px;
       cursor: pointer;
       transition: 0.25s;
-      border: 1px solid transparent;
-      text-align: center;
+      font-size: 18px;
       font-weight: 600;
     }
     .option:hover {
-      transform: translateY(-1px);
-      background: rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.28);
+      transform: translateY(-2px);
     }
     .option.selected {
       background: #ffd700;
       color: #1a1a1a;
-      border-color: #ffb300;
-      box-shadow: 0 0 0 2px rgba(255,215,0,0.5);
+      box-shadow: 0 0 0 2px rgba(255,215,0,0.6);
     }
 
-    /* دکمه تایید */
     .confirm-btn {
-      margin-top: 16px;
+      margin-top: 20px;
       width: 100%;
-      padding: 14px;
+      padding: 16px;
       border: none;
-      border-radius: 14px;
-      background: #2ecc71;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
       color: #fff;
       font-weight: 800;
-      letter-spacing: 0.2px;
+      font-size: 18px;
       cursor: pointer;
-      transition: 0.25s;
-      box-shadow: 0 8px 16px rgba(46,204,113,0.25);
+      transition: 0.3s;
+      box-shadow: 0 8px 16px rgba(46,204,113,0.3);
     }
-    .confirm-btn:hover { transform: translateY(-1px); background: #32d67d; }
-
-    /* انیمیشن تکان برای هشدار عدم انتخاب */
-    @keyframes shake {
-      10%, 90% { transform: translateX(-1px); }
-      20%, 80% { transform: translateX(2px); }
-      30%, 50%, 70% { transform: translateX(-4px); }
-      40%, 60% { transform: translateX(4px); }
+    .confirm-btn:hover {
+      transform: scale(1.05);
+      background: linear-gradient(135deg, #32d67d, #2ecc71);
     }
-    .shake { animation: shake 0.35s; }
 
-    /* فوتر مینیمال */
     footer {
       text-align: center;
-      padding: 12px;
-      font-size: 12px;
-      color: #cfcfcf;
-    }
-
-    /* ریسپانسیو کوچک */
-    @media (max-width: 360px) {
-      .question-box { max-width: 95vw; padding: 18px; }
-      .question-title { font-size: 20px; }
-      .status-bar { height: 32px; }
+      padding: 14px;
+      font-size: 13px;
+      color: #ccc;
     }
   </style>
 </head>
 <body>
   <div class="page">
     <header>
-      <button onclick="setMode('four')">چهار گزینه‌ای</button>
-      <button onclick="setMode('two')">دو گزینه‌ای</button>
-      <button onclick="setMode('truefalse')">درست/غلط</button>
+      <button onclick="setMode('truefalse')">سوال‌های درست و غلط</button>
+      <button onclick="setMode('four')">سوال‌های چهار گزینه‌ای</button>
+      <button onclick="setMode('two')">سوال‌های دو گزینه‌ای</button>
     </header>
 
     <div class="center-wrap">
       <div class="question-box" id="qbox">
         <h2 class="question-title" id="question">اخلاق اسلامی: احترام به والدین</h2>
 
-        <!-- نوار وضعیت زیر متن سؤال -->
         <div class="status-bar">
           <div class="status-fill" id="status-fill"></div>
           <div class="status-text" id="status-text">0 از 10 پاسخ داده شده</div>
@@ -192,11 +173,10 @@
       </div>
     </div>
 
-    <footer>حال‌وهوای مذهبی، اخلاقی و مینیمال • طراحی برای موبایل</footer>
+    <footer>طراحی مذهبی و اخلاقی • مناسب موبایل</footer>
   </div>
 
   <script>
-    // حالت‌ها و داده نمونه با موضوع اخلاق و مذهب
     const data = {
       four: [
         { q: "کدام مورد از نشانه‌های احترام به والدین است؟", opts: ["گوش دادن با دقت", "بی‌توجهی", "قطع صحبت", "بی‌ادبی"] },
@@ -214,7 +194,7 @@
 
     let mode = "four";
     let answered = 0;
-    const totalQuestions = 10; // برای نمایش وضعیت؛ می‌توان تغییر داد
+    const totalQuestions = 10;
     let currentIndex = 0;
     let selectedIndex = null;
 
@@ -223,13 +203,12 @@
       currentIndex = 0;
       selectedIndex = null;
       renderQuestion();
-      updateStatus(); // حفظ هم‌خوانی متن و درصد
+      updateStatus();
     }
 
     function renderQuestion() {
       const list = data[mode];
       const { q, opts } = list[currentIndex % list.length];
-
       document.getElementById("question").innerText = q;
 
       const optionsDiv = document.getElementById("options");
@@ -246,39 +225,18 @@
 
     function selectOption(idx, el) {
       selectedIndex = idx;
-      // پاک کردن انتخاب‌های قبلی
       document.querySelectorAll(".option").forEach(o => o.classList.remove("selected"));
       el.classList.add("selected");
     }
 
     function nextQuestion() {
-      const qbox = document.getElementById("qbox");
-
-      // اگر گزینه‌ای انتخاب نشده بود، تکان بده و افزایش نده
       if (selectedIndex === null) {
-        qbox.classList.add("shake");
-        setTimeout(() => qbox.classList.remove("shake"), 360);
+        document.getElementById("qbox").classList.add("shake");
+        setTimeout(() => document.getElementById("qbox").classList.remove("shake"), 360);
         return;
       }
-
-      // ثبت پاسخ و حرکت به بعدی
       answered = Math.min(answered + 1, totalQuestions);
       updateStatus();
-
       selectedIndex = null;
       currentIndex++;
       renderQuestion();
-    }
-
-    function updateStatus() {
-      const pct = Math.round((answered / totalQuestions) * 100);
-      document.getElementById("status-fill").style.width = pct + "%";
-      document.getElementById("status-text").innerText = `${answered} از ${totalQuestions} پاسخ داده شده`;
-    }
-
-    // بارگذاری اولیه
-    renderQuestion();
-    updateStatus();
-  </script>
-</body>
-</html>
