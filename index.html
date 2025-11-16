@@ -31,7 +31,7 @@
       border-bottom: 1px solid rgba(255,255,255,0.15);
     }
 
-    header button {
+    .mode-btn {
       padding: 12px 18px;
       border: none;
       border-radius: 30px;
@@ -42,8 +42,8 @@
       transition: 0.3s;
       box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
     }
-    header button:hover {
-      transform: scale(1.08);
+    .mode-btn:hover {
+      transform: scale(1.06);
       background: linear-gradient(135deg, #ffe066, #ffb300);
     }
 
@@ -63,21 +63,22 @@
       border-radius: 26px;
       padding: 28px;
       box-shadow: 0 12px 28px rgba(255,215,0,0.25), inset 0 0 0 1px rgba(255,255,255,0.18);
-      text-align: center;
     }
 
     .question-title {
       font-size: 24px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       color: #ffd700;
       text-shadow: 0 0 10px rgba(255,215,0,0.5);
+      text-align: right; /* تأکید بر راست‌چین */
+      line-height: 1.8;
     }
 
     /* نوار وضعیت */
     .status-bar {
       margin: 10px 0 22px 0;
       width: 100%;
-      height: 38px;
+      height: 40px;
       border-radius: 16px;
       background: rgba(255,255,255,0.2);
       overflow: hidden;
@@ -113,6 +114,8 @@
       transition: 0.25s;
       font-size: 18px;
       font-weight: 600;
+      text-align: right; /* گزینه‌ها راست‌چین */
+      border: 1px solid transparent;
     }
     .option:hover {
       background: rgba(255,255,255,0.28);
@@ -122,6 +125,7 @@
       background: #ffd700;
       color: #1a1a1a;
       box-shadow: 0 0 0 2px rgba(255,215,0,0.6);
+      border-color: #ffb300;
     }
 
     .confirm-btn {
@@ -139,9 +143,18 @@
       box-shadow: 0 8px 16px rgba(46,204,113,0.3);
     }
     .confirm-btn:hover {
-      transform: scale(1.05);
+      transform: scale(1.04);
       background: linear-gradient(135deg, #32d67d, #2ecc71);
     }
+
+    /* تکان برای هشدار عدم انتخاب */
+    @keyframes shake {
+      10%, 90% { transform: translateX(-1px); }
+      20%, 80% { transform: translateX(2px); }
+      30%, 50%, 70% { transform: translateX(-4px); }
+      40%, 60% { transform: translateX(4px); }
+    }
+    .shake { animation: shake 0.35s; }
 
     footer {
       text-align: center;
@@ -149,14 +162,20 @@
       font-size: 13px;
       color: #ccc;
     }
+
+    @media (max-width: 360px) {
+      .question-box { max-width: 95vw; padding: 22px; }
+      .question-title { font-size: 22px; }
+      .status-bar { height: 36px; }
+    }
   </style>
 </head>
 <body>
   <div class="page">
     <header>
-      <button onclick="setMode('truefalse')">سوال‌های درست و غلط</button>
-      <button onclick="setMode('four')">سوال‌های چهار گزینه‌ای</button>
-      <button onclick="setMode('two')">سوال‌های دو گزینه‌ای</button>
+      <button class="mode-btn" onclick="setMode('truefalse')">سوال‌های درست و غلط</button>
+      <button class="mode-btn" onclick="setMode('four')">سوال‌های چهار گزینه‌ای</button>
+      <button class="mode-btn" onclick="setMode('two')">سوال‌های دو گزینه‌ای</button>
     </header>
 
     <div class="center-wrap">
@@ -177,6 +196,7 @@
   </div>
 
   <script>
+    // داده‌ها با موضوع اخلاق اسلامی
     const data = {
       four: [
         { q: "کدام مورد از نشانه‌های احترام به والدین است؟", opts: ["گوش دادن با دقت", "بی‌توجهی", "قطع صحبت", "بی‌ادبی"] },
@@ -192,7 +212,7 @@
       ],
     };
 
-    let mode = "four";
+    let mode = "four";           // حالت پیش‌فرض
     let answered = 0;
     const totalQuestions = 10;
     let currentIndex = 0;
@@ -208,13 +228,13 @@
 
     function renderQuestion() {
       const list = data[mode];
-      const { q, opts } = list[currentIndex % list.length];
-      document.getElementById("question").innerText = q;
+      const item = list[currentIndex % list.length];
+      document.getElementById("question").innerText = item.q;
 
       const optionsDiv = document.getElementById("options");
       optionsDiv.innerHTML = "";
 
-      opts.forEach((text, idx) => {
+      item.opts.forEach((text, idx) => {
         const el = document.createElement("div");
         el.className = "option";
         el.innerText = text;
@@ -230,9 +250,10 @@
     }
 
     function nextQuestion() {
+      const qbox = document.getElementById("qbox");
       if (selectedIndex === null) {
-        document.getElementById("qbox").classList.add("shake");
-        setTimeout(() => document.getElementById("qbox").classList.remove("shake"), 360);
+        qbox.classList.add("shake");
+        setTimeout(() => qbox.classList.remove("shake"), 360);
         return;
       }
       answered = Math.min(answered + 1, totalQuestions);
@@ -240,3 +261,17 @@
       selectedIndex = null;
       currentIndex++;
       renderQuestion();
+    }
+
+    function updateStatus() {
+      const pct = Math.round((answered / totalQuestions) * 100);
+      document.getElementById("status-fill").style.width = pct + "%";
+      document.getElementById("status-text").innerText = `${answered} از ${totalQuestions} پاسخ داده شده`;
+    }
+
+    // بارگذاری اولیه
+    renderQuestion();
+    updateStatus();
+  </script>
+</body>
+</html>
