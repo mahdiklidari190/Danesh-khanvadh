@@ -5,15 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>اخلاق اسلامی</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+    
     body {
       margin: 0;
       font-family: "Tahoma", sans-serif;
       background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       color: #fff;
       direction: rtl;
-    }
-
-    .page {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -27,24 +28,50 @@
       flex-wrap: wrap;
       background: rgba(255,255,255,0.08);
       backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255,255,255,0.15);
+      border-bottom: 1px solid rgba(255,215,0,0.3);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     }
 
     .mode-btn {
-      padding: 12px 18px;
+      padding: 12px 24px;
       border: none;
       border-radius: 30px;
-      background: linear-gradient(135deg, #ffd700, #ff9800);
-      color: #1a1a1a;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
       font-weight: bold;
       cursor: pointer;
-      transition: 0.3s;
-      box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mode-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #ffd700, #ff9800);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
     }
 
     .mode-btn:hover {
-      transform: scale(1.06);
-      background: linear-gradient(135deg, #ffe066, #ffb300);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(255,215,0,0.3);
+    }
+
+    .mode-btn.active {
+      color: #1a1a1a;
+      background: linear-gradient(135deg, #ffd700, #ff9800);
+      box-shadow: 0 4px 16px rgba(255,215,0,0.5);
+    }
+
+    .mode-btn.active::before {
+      opacity: 1;
     }
 
     .center-wrap {
@@ -65,12 +92,59 @@
       box-shadow: 0 12px 28px rgba(255,215,0,0.25), inset 0 0 0 1px rgba(255,255,255,0.18);
     }
 
+    .progress-container {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .progress-label {
+      font-size: 14px;
+      color: #ffd700;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 0 4px rgba(0,0,0,0.3);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ffd700, #ff9800);
+      border-radius: 10px;
+      transition: width 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+      position: relative;
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
     .question-title {
       font-size: 22px;
-      margin-bottom: 16px;
+      margin-bottom: 24px;
       color: #ffd700;
       text-shadow: 0 0 10px rgba(255,215,0,0.5);
       line-height: 1.8;
+      font-weight: bold;
     }
 
     .options {
@@ -81,24 +155,27 @@
 
     .option {
       background: rgba(255,255,255,0.18);
-      padding: 16px;
+      padding: 16px 20px;
       border-radius: 16px;
       cursor: pointer;
-      transition: 0.25s;
+      transition: all 0.3s ease;
       font-size: 18px;
       font-weight: 600;
       border: 1px solid transparent;
+      position: relative;
+      overflow: hidden;
     }
 
     .option:hover {
       background: rgba(255,255,255,0.28);
-      transform: translateY(-2px);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
     }
 
     .option.selected {
-      background: #ffd700;
+      background: linear-gradient(135deg, #ffd700, #ffb700);
       color: #1a1a1a;
-      box-shadow: 0 0 0 2px rgba(255,215,0,0.6);
+      box-shadow: 0 0 0 2px rgba(255,215,0,0.6), 0 6px 16px rgba(255,215,0,0.4);
       border-color: #ffb300;
     }
 
@@ -113,13 +190,19 @@
       font-weight: 800;
       font-size: 18px;
       cursor: pointer;
-      transition: 0.3s;
+      transition: all 0.3s ease;
       box-shadow: 0 8px 16px rgba(46,204,113,0.3);
+      position: relative;
+      overflow: hidden;
     }
 
     .confirm-btn:hover {
-      transform: scale(1.04);
-      background: linear-gradient(135deg, #32d67d, #2ecc71);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(46,204,113,0.4);
+    }
+
+    .confirm-btn:active {
+      transform: translateY(0);
     }
 
     .result-box {
@@ -127,19 +210,27 @@
       padding: 20px;
       background: rgba(255,255,255,0.1);
       border-radius: 16px;
+      max-height: 400px;
+      overflow-y: auto;
     }
 
     .result-item {
-      margin-bottom: 10px;
-      font-size: 16px;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 12px;
+      font-size: 15px;
+      line-height: 1.6;
     }
 
     .correct {
       color: #2ecc71;
+      font-weight: bold;
     }
 
     .incorrect {
       color: #e74c3c;
+      font-weight: bold;
     }
 
     footer {
@@ -147,24 +238,49 @@
       padding: 14px;
       font-size: 13px;
       color: #ccc;
+      background: rgba(0,0,0,0.2);
+      margin-top: auto;
+    }
+
+    /* انیمیشن لرزش */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .shake {
+      animation: shake 0.3s ease-in-out;
+    }
+
+    @media (max-width: 768px) {
+      .question-box { max-width: 95vw; padding: 22px; }
+      .question-title { font-size: 20px; }
+      .mode-btn { padding: 10px 20px; font-size: 14px; }
     }
 
     @media (max-width: 360px) {
-      .question-box { max-width: 95vw; padding: 22px; }
-      .question-title { font-size: 20px; }
+      .question-title { font-size: 18px; }
+      .option { font-size: 16px; padding: 14px; }
     }
   </style>
 </head>
 <body>
   <div class="page">
     <header>
-      <button class="mode-btn" onclick="setMode('four')">چهار گزینه‌ای</button>
-      <button class="mode-btn" onclick="setMode('truefalse')">درست/غلط</button>
-      <button class="mode-btn" onclick="setMode('two')">دو گزینه‌ای</button>
+      <button class="mode-btn" id="btn-four" onclick="setMode('four')">چهار گزینه‌ای</button>
+      <button class="mode-btn" id="btn-truefalse" onclick="setMode('truefalse')">درست / غلط</button>
     </header>
 
     <div class="center-wrap">
       <div class="question-box" id="qbox">
+        <div class="progress-container">
+          <div class="progress-label" id="progressLabel">سوال 1 از 20</div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+
         <h2 class="question-title" id="question">سؤال</h2>
         <div class="options" id="options"></div>
         <button class="confirm-btn" onclick="handleConfirm()">تأیید</button>
@@ -177,83 +293,51 @@
 
   <script>
     const data = {
-  four: [
-    { q: "هدف نهایی اخلاق اسلامی چیست؟", opts: ["رسیدن به سعادت و کمال انسانی", "افزایش ثروت", "کسب قدرت سیاسی", "رقابت اجتماعی"], correct: 0 },
-    { q: "کدام‌یک از اصول زیر از مبانی اخلاق اسلامی محسوب می‌شود؟", opts: ["توحید", "نسبی‌گرایی اخلاقی", "فردگرایی مطلق", "سودگرایی"], correct: 0 },
-    { q: "عدالت در اخلاق اسلامی به چه معناست؟", opts: ["مساوات مطلق", "قرار دادن هر چیز در جای خود", "تقسیم برابر ثروت", "آزادی بی‌حد و مرز"], correct: 1 },
-    { q: "کدام‌یک از موارد زیر از فضایل اخلاقی در اسلام است؟", opts: ["صداقت", "حسادت", "تکبر", "دروغ"], correct: 0 },
-    { q: "مبانی اخلاق اسلامی بیشتر بر چه منابعی استوار است؟", opts: ["قرآن و سنت پیامبر (ص)", "فلسفه یونان", "عرف اجتماعی", "تجربه شخصی"], correct: 0 },
-    { q: "کدام‌یک از رذایل اخلاقی در اسلام به شدت نکوهش شده است؟", opts: ["تواضع", "تکبر", "ایثار", "صداقت"], correct: 1 },
-    { q: "اخلاق اسلامی چه رابطه‌ای با ایمان دارد؟", opts: ["هیچ ارتباطی ندارد", "مکمل ایمان است", "جایگزین ایمان است", "مانع ایمان است"], correct: 1 },
-    { q: "کدام‌یک از اهداف تربیت اخلاقی در اسلام است؟", opts: ["رشد عقلانی و معنوی انسان", "افزایش قدرت نظامی", "توسعه اقتصادی", "رقابت اجتماعی"], correct: 0 },
-    { q: "در اخلاق اسلامی، «تقوا» به چه معناست؟", opts: ["پرهیز از گناه و انجام وظایف الهی", "افزایش ثروت", "کسب قدرت سیاسی", "آزادی مطلق"], correct: 0 },
-    { q: "کدام‌یک از منابع شناخت اخلاق اسلامی است؟", opts: ["عقل و وحی", "تجربه شخصی", "عرف اجتماعی", "فلسفه غرب"], correct: 0 },
-    { q: "صداقت در اخلاق اسلامی چه جایگاهی دارد؟", opts: ["اصل اساسی روابط انسانی", "یک امر اختیاری", "بی‌اهمیت", "فقط در معاملات لازم است"], correct: 0 },
-    { q: "کدام‌یک از آثار رعایت اخلاق اسلامی در جامعه است؟", opts: ["افزایش اعتماد اجتماعی", "کاهش همکاری", "افزایش فساد", "بی‌تفاوتی اجتماعی"], correct: 0 },
-    { q: "در اخلاق اسلامی، «ایثار» به چه معناست؟", opts: ["ترجیح دادن دیگران بر خود در امور خیر", "خودخواهی", "رقابت ناسالم", "بی‌تفاوتی"], correct: 0 },
-    { q: "کدام‌یک از ویژگی‌های انسان اخلاقی در اسلام است؟", opts: ["تواضع", "تکبر", "حسادت", "دروغ"], correct: 0 },
-    { q: "اخلاق اسلامی چه رابطه‌ای با حقوق دارد؟", opts: ["مکمل حقوق است", "جایگزین حقوق است", "مانع حقوق است", "هیچ ارتباطی ندارد"], correct: 0 },
-    { q: "کدام‌یک از اصول اخلاق اجتماعی در اسلام است؟", opts: ["تعاون و همکاری", "رقابت ناسالم", "بی‌تفاوتی اجتماعی", "خودخواهی"], correct: 0 },
-    { q: "در اخلاق اسلامی، «عدالت» چه نقشی دارد؟", opts: ["اساس روابط اجتماعی", "بی‌اهمیت", "فقط در اقتصاد لازم است", "مانع آزادی است"], correct: 0 },
-    { q: "کدام‌یک از اهداف اخلاق اسلامی است؟", opts: ["تعالی روحی و معنوی انسان", "افزایش قدرت سیاسی", "توسعه اقتصادی", "رقابت اجتماعی"], correct: 0 },
-    { q: "در اخلاق اسلامی، «حیا» به چه معناست؟", opts: ["پرهیز از کارهای زشت و ناپسند", "بی‌تفاوتی", "خودخواهی", "رقابت ناسالم"], correct: 0 },
-    { q: "کدام‌یک از آثار بی‌اخلاقی در جامعه است؟", opts: ["افزایش فساد و بی‌اعتمادی", "افزایش همکاری", "افزایش اعتماد اجتماعی", "کاهش فساد"], correct: 0 }
+      four: [
+        { q: "هدف نهایی اخلاق اسلامی چیست؟", opts: ["رسیدن به سعادت و کمال انسانی", "افزایش ثروت", "کسب قدرت سیاسی", "رقابت اجتماعی"], correct: 0 },
+        { q: "کدام‌یک از اصول زیر از مبانی اخلاق اسلامی محسوب می‌شود؟", opts: ["توحید", "نسبی‌گرایی اخلاقی", "فردگرایی مطلق", "سودگرایی"], correct: 0 },
+        { q: "عدالت در اخلاق اسلامی به چه معناست؟", opts: ["مساوات مطلق", "قرار دادن هر چیز در جای خود", "تقسیم برابر ثروت", "آزادی بی‌حد و مرز"], correct: 1 },
+        { q: "کدام‌یک از موارد زیر از فضایل اخلاقی در اسلام است؟", opts: ["صداقت", "حسادت", "تکبر", "دروغ"], correct: 0 },
+        { q: "مبانی اخلاق اسلامی بیشتر بر چه منابعی استوار است؟", opts: ["قرآن و سنت پیامبر (ص)", "فلسفه یونان", "عرف اجتماعی", "تجربه شخصی"], correct: 0 },
+        { q: "کدام‌یک از رذایل اخلاقی در اسلام به شدت نکوهش شده است؟", opts: ["تواضع", "تکبر", "ایثار", "صداقت"], correct: 1 },
+        { q: "اخلاق اسلامی چه رابطه‌ای با ایمان دارد؟", opts: ["هیچ ارتباطی ندارد", "مکمل ایمان است", "جایگزین ایمان است", "مانع ایمان است"], correct: 1 },
+        { q: "کدام‌یک از اهداف تربیت اخلاقی در اسلام است؟", opts: ["رشد عقلانی و معنوی انسان", "افزایش قدرت نظامی", "توسعه اقتصادی", "رقابت اجتماعی"], correct: 0 },
+        { q: "در اخلاق اسلامی، «تقوا» به چه معناست؟", opts: ["پرهیز از گناه و انجام وظایف الهی", "افزایش ثروت", "کسب قدرت سیاسی", "آزادی مطلق"], correct: 0 },
+        { q: "کدام‌یک از منابع شناخت اخلاق اسلامی است؟", opts: ["عقل و وحی", "تجربه شخصی", "عرف اجتماعی", "فلسفه غرب"], correct: 0 },
+        { q: "صداقت در اخلاق اسلامی چه جایگاهی دارد؟", opts: ["اصل اساسی روابط انسانی", "یک امر اختیاری", "بی‌اهمیت", "فقط در معاملات لازم است"], correct: 0 },
+        { q: "کدام‌یک از آثار رعایت اخلاق اسلامی در جامعه است؟", opts: ["افزایش اعتماد اجتماعی", "کاهش همکاری", "افزایش فساد", "بی‌تفاوتی اجتماعی"], correct: 0 },
+        { q: "در اخلاق اسلامی، «ایثار» به چه معناست؟", opts: ["ترجیح دادن دیگران بر خود در امور خیر", "خودخواهی", "رقابت ناسالم", "بی‌تفاوتی"], correct: 0 },
+        { q: "کدام‌یک از ویژگی‌های انسان اخلاقی در اسلام است؟", opts: ["تواضع", "تکبر", "حسادت", "دروغ"], correct: 0 },
+        { q: "اخلاق اسلامی چه رابطه‌ای با حقوق دارد؟", opts: ["مکمل حقوق است", "جایگزین حقوق است", "مانع حقوق است", "هیچ ارتباطی ندارد"], correct: 0 },
+        { q: "کدام‌یک از اصول اخلاق اجتماعی در اسلام است؟", opts: ["تعاون و همکاری", "رقابت ناسالم", "بی‌تفاوتی اجتماعی", "خودخواهی"], correct: 0 },
+        { q: "در اخلاق اسلامی، «عدالت» چه نقشی دارد؟", opts: ["اساس روابط اجتماعی", "بی‌اهمیت", "فقط در اقتصاد لازم است", "مانع آزادی است"], correct: 0 },
+        { q: "کدام‌یک از اهداف اخلاق اسلامی است؟", opts: ["تعالی روحی و معنوی انسان", "افزایش قدرت سیاسی", "توسعه اقتصادی", "رقابت اجتماعی"], correct: 0 },
+        { q: "در اخلاق اسلامی، «حیا» به چه معناست؟", opts: ["پرهیز از کارهای زشت و ناپسند", "بی‌تفاوتی", "خودخواهی", "رقابت ناسالم"], correct: 0 },
+        { q: "کدام‌یک از آثار بی‌اخلاقی در جامعه است؟", opts: ["افزایش فساد و بی‌اعتمادی", "افزایش همکاری", "افزایش اعتماد اجتماعی", "کاهش فساد"], correct: 0 }
       ],
-  truefalse: [
-    { q: "اخلاق اسلامی تنها به رفتار فردی انسان توجه دارد.", opts: ["درست", "غلط"], correct: 1 },
-    { q: "صداقت یکی از اصول اساسی اخلاق اسلامی است.", opts: ["درست", "غلط"], correct: 0 },
-    { q: "عدالت در اخلاق اسلامی به معنای مساوات مطلق است.", opts: ["درست", "غلط"], correct: 1 },
-    { q: "اخلاق اسلامی بر پایه عقل و وحی بنا شده است.", opts: ["درست", "غلط"], correct: 0 },
-    { q: "هدف اخلاق اسلامی تنها کنترل رفتار بیرونی انسان است.", opts: ["درست", "غلط"], correct: 1 },
-    { q: "تواضع از فضایل اخلاقی در اسلام است.", opts: ["درست", "غلط"], correct: 0 },
-    { q: "تکبر از فضایل اخلاقی در اسلام است.", opts: ["درست", "غلط"], correct: 1 },
-    { q: "ایثار به معنای ترجیح دادن دیگران بر خود در امور خیر است.", opts: ["درست", "غلط"], correct: 0 },
-    { q: "اخلاق اسلامی هیچ ارتباطی با ایمان ندارد.", opts: ["درست", "غلط"], correct: 1 },
-    { q: "تقوا به معنای پرهیز از گناه و انجام وظایف الهی است.", opts: ["درست", "غلط"], correct: 0 },
-    { q: "اخلاق اسلامی تنها به روابط اجتماعی توجه دارد.", opts: ["درست", "غلط"], correct: 1 },
-    { q: "رعایت اخلاق اسلامی موجب افزایش اعتماد اجتماعی می‌شود.", opts: ["درست", "غلط"], correct: 0 },
-    { q: "حسادت از فضایل اخلاقی در اسلام است.", opts: ["درست", "غلط"], correct: 1 },
-    { q: "عدالت اساس روابط اجتماعی در اسلام است.", opts: ["درست", "غلط"], correct: 0 },
-    { q: "اخلاق اسلامی مکمل حقوق است.", opts: ["درست", "غلط"], correct: 0 },
-    { q: "بی‌تفاوتی اجتماعی از اصول اخلاق اسلامی است.", opts: ["درست", "غلط"], correct: 1 },
-    { q: "تعاون و همکاری از اصول اخلاق اجتماعی در اسلام است.", opts: ["درست", "غلط"], correct: 0 },
-    { q: "حیا به معنای پرهیز از کارهای زشت و ناپسند است.", opts: ["درست", "غلط"], correct: 0 },
-    { q: "اخلاق اسلامی هیچ ارتباطی با قرآن و سنت ندارد.", opts: ["درست", "غلط"], correct: 1 },
-    { q: "هدف اخلاق اسلامی تعالی روحی و معنوی انسان است.", opts: ["درست", "غلط"], correct: 0 }
-      ],
-  two: [
-    { q: "خودفراموشی به خودفریبی منتهی می‌شود؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "تسویل در قرآن به معنای توجیه نفس در انجام کار زشت است؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "خودآگاهی در خودسازی اخلاقی نقش دارد؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "قناعت می‌تواند به آرامش روانی منجر شود؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "حکمت فقط با مطالعه کتاب به دست می‌آید؟", opts: ["بله", "خیر"], correct: 1 },
-    { q: "عزت نفس سالم با تکبر تفاوت دارد؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "غفلت از خدا باعث سقوط اخلاقی می‌شود؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "کفران نعمت به ناسپاسی گفته می‌شود؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "تقوا مانع گناه می‌شود؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "توکل با تلاش منافات دارد؟", opts: ["بله", "خیر"], correct: 1 },
-    { q: "محبت خدا بر روابط انسان با دیگران تأثیر دارد؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "ایثار در اسلام با گذشت معمولی تفاوت دارد؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "ستم فقط شامل غصب مال می‌شود؟", opts: ["بله", "خیر"], correct: 1 },
-    { q: "تکبر مانع یادگیری فرد می‌شود؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "عدالت پایه جامعه مطلوب است؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "تواضع باعث جذب محبت دیگران می‌شود؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "ایثار فقط در امور مالی کاربرد دارد؟", opts: ["بله", "خیر"], correct: 1 },
-    { q: "مسلمان در برابر استکبار مسئولیت دارد؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "فطرت انسان را به سمت کمال هدایت می‌کند؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "هوای نفس باعث خودفراموشی می‌شود؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "امکانات رشد شامل تمرین و همنشینی صالح است؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "اخلاق فردی مقدم بر اخلاق اجتماعی است؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "جامعه مطلوب بدون برخورداری‌های اخلاقی شکل می‌گیرد؟", opts: ["بله", "خیر"], correct: 1 },
-    { q: "رابطه با خدا بر روابط با خود و دیگران تأثیر دارد؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "دنیاگرایی مانع رشد اخلاقی است؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "عزت نفس برای نسل جوان جذاب است؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "برخورداری‌های اخلاقی برای جوانان ناکارآمد است؟", opts: ["بله", "خیر"], correct: 1 },
-    { q: "رابطه با خدا فقط شخصی است؟", opts: ["بله", "خیر"], correct: 1 },
-    { q: "تمرین‌های اخلاقی در تثبیت اخلاق مؤثرند؟", opts: ["بله", "خیر"], correct: 0 },
-    { q: "شعایر دینی نقش تمرین اخلاقی دارند؟", opts: ["بله", "خیر"], correct: 0 }
-  ]
-};
+      truefalse: [
+        { q: "اخلاق اسلامی تنها به رفتار فردی انسان توجه دارد.", opts: ["درست", "غلط"], correct: 1 },
+        { q: "صداقت یکی از اصول اساسی اخلاق اسلامی است.", opts: ["درست", "غلط"], correct: 0 },
+        { q: "عدالت در اخلاق اسلامی به معنای مساوات مطلق است.", opts: ["درست", "غلط"], correct: 1 },
+        { q: "اخلاق اسلامی بر پایه عقل و وحی بنا شده است.", opts: ["درست", "غلط"], correct: 0 },
+        { q: "هدف اخلاق اسلامی تنها کنترل رفتار بیرونی انسان است.", opts: ["درست", "غلط"], correct: 1 },
+        { q: "تواضع از فضایل اخلاقی در اسلام است.", opts: ["درست", "غلط"], correct: 0 },
+        { q: "تکبر از فضایل اخلاقی در اسلام است.", opts: ["درست", "غلط"], correct: 1 },
+        { q: "ایثار به معنای ترجیح دادن دیگران بر خود در امور خیر است.", opts: ["درست", "غلط"], correct: 0 },
+        { q: "اخلاق اسلامی هیچ ارتباطی با ایمان ندارد.", opts: ["درست", "غلط"], correct: 1 },
+        { q: "تقوا به معنای پرهیز از گناه و انجام وظایف الهی است.", opts: ["درست", "غلط"], correct: 0 },
+        { q: "اخلاق اسلامی تنها به روابط اجتماعی توجه دارد.", opts: ["درست", "غلط"], correct: 1 },
+        { q: "رعایت اخلاق اسلامی موجب افزایش اعتماد اجتماعی می‌شود.", opts: ["درست", "غلط"], correct: 0 },
+        { q: "حسادت از فضایل اخلاقی در اسلام است.", opts: ["درست", "غلط"], correct: 1 },
+        { q: "عدالت اساس روابط اجتماعی در اسلام است.", opts: ["درست", "غلط"], correct: 0 },
+        { q: "اخلاق اسلامی مکمل حقوق است.", opts: ["درست", "غلط"], correct: 0 },
+        { q: "بی‌تفاوتی اجتماعی از اصول اخلاق اسلامی است.", opts: ["درست", "غلط"], correct: 1 },
+        { q: "تعاون و همکاری از اصول اخلاق اجتماعی در اسلام است.", opts: ["درست", "غلط"], correct: 0 },
+        { q: "حیا به معنای پرهیز از کارهای زشت و ناپسند است.", opts: ["درست", "غلط"], correct: 0 },
+        { q: "اخلاق اسلامی هیچ ارتباطی با قرآن و سنت ندارد.", opts: ["درست", "غلط"], correct: 1 },
+        { q: "هدف اخلاق اسلامی تعالی روحی و معنوی انسان است.", opts: ["درست", "غلط"], correct: 0 }
+      ]
+    };
 
     let mode = "four";
     let currentIndex = 0;
@@ -267,7 +351,15 @@
       userAnswers = [];
       document.getElementById("result").style.display = "none";
       document.querySelector(".confirm-btn").style.display = "inline-block";
+      
+      // به‌روز کردن حالت دکمه‌ها
+      document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.getElementById(`btn-${m}`).classList.add('active');
+      
       renderQuestion();
+      updateProgressBar();
     }
 
     function renderQuestion() {
@@ -293,6 +385,14 @@
       el.classList.add("selected");
     }
 
+    function updateProgressBar() {
+      const total = data[mode].length;
+      const progress = (currentIndex / total) * 100;
+      
+      document.getElementById("progressFill").style.width = progress + "%";
+      document.getElementById("progressLabel").innerText = `سوال ${currentIndex + 1} از ${total}`;
+    }
+
     function handleConfirm() {
       const qbox = document.getElementById("qbox");
       if (selectedIndex === null) {
@@ -313,6 +413,7 @@
 
       if (currentIndex < data[mode].length) {
         renderQuestion();
+        updateProgressBar();
       } else {
         showResults();
       }
@@ -322,6 +423,10 @@
       document.getElementById("options").innerHTML = "";
       document.querySelector(".confirm-btn").style.display = "none";
       document.getElementById("question").innerText = "نتیجه آزمون";
+      
+      // پر کردن نوار پیشرفت در پایان
+      document.getElementById("progressFill").style.width = "100%";
+      document.getElementById("progressLabel").innerText = `پایان آزمون (${data[mode].length} سوال)`;
 
       let correctCount = 0;
       const resultDiv = document.getElementById("result");
@@ -338,7 +443,7 @@
 
         item.options.forEach((opt, i) => {
           const span = document.createElement("span");
-          span.innerText = opt;
+          span.innerText = `${i + 1}. ${opt}`;
           if (i === item.correctAnswer) {
             span.className = "correct";
           } else if (i === item.userAnswer && !isCorrect) {
@@ -356,7 +461,9 @@
     }
 
     // بارگذاری اولیه
+    document.getElementById('btn-four').classList.add('active');
     renderQuestion();
+    updateProgressBar();
   </script>
 </body>
 </html>
